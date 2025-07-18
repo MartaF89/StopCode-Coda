@@ -13,7 +13,7 @@ app.listen(3000, () => {
 app.get("/", (req, res) => {
   res.send("Mettiti in Fila!");
 });
-//GET restituisce l intero array di persone e il numero di persone in coda
+//GET restituisce l intero array di persone e il numero di persone in Coda
 app.get("/list", (req, res) => {
   res.send({
     coda: coda, // queue
