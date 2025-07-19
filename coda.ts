@@ -2,10 +2,12 @@
 import express from "express";
 import { Persona, Persone } from "./models/persona";
 import bodyParser from "body-parser";
+
 //creo l'applicazione express
 const app = express();
 app.use(bodyParser.json()); // quando riceve del contenuto json lo interpreta i inserisce nel corpo della richiesta(body)
 let coda: Persona[] = Persone;
+let filaChiusa = false; //stato della fila
 //avvio il webserver in ascolto sulla porta 3000
 app.listen(3000, () => {
   console.log("backend in ascolto sulla porta 3000");
@@ -22,6 +24,7 @@ app.get("/list", (req, res) => {
 });
 //POST PER AGGIUNGERE UNA PERSONA ALLA CODA
 app.post("/add", (req, res) => {
+  console.log("Body ricevuto in /add:", req.body);
   const nuovaPersona: Persona = req.body;
   //controllo max 10pers
   if (coda.length > 10) {
@@ -54,6 +57,25 @@ app.delete("/serve", (req, res) => {
   res.send({
     message: "Persona Servita",
     persona: personaServita,
+    coda: coda,
+    count: coda.length,
+  });
+});
+
+//RIMESCOLAMENTO CODA con metodo sort()
+app.get("/shuffle", (req, res) => {
+  const codaRimescolata = [...coda].sort(() => Math.random() - 0.5);
+  res.json({
+    coda: codaRimescolata,
+    message: "Rimescolamento avvenuto con successo",
+    count: codaRimescolata.length,
+  });
+});
+//CHIUSURA CODA
+app.post("/close", (req, res) => {
+  filaChiusa = true;
+  res.json({
+    message: "Coda chiusa con successo",
     coda: coda,
     count: coda.length,
   });
