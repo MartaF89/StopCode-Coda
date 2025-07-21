@@ -27,7 +27,7 @@ app.post("/add", (req, res) => {
   console.log("Body ricevuto in /add:", req.body);
   const nuovaPersona: Persona = req.body;
   //controllo max 10pers
-  if (coda.length > 10) {
+  if (coda.length >= 10) {
     return res.status(400).send({ error: "La Coda è piena, max 10 persone" });
   }
   if (!nuovaPersona.nome || !nuovaPersona.cognome) {
